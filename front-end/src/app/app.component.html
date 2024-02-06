@@ -1,0 +1,26 @@
+<mat-toolbar color="primary" *ngIf="authService.isLoggedin()">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>Tasker</span>
+    <span class="spacer"></span>
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>alarm</mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>person</mat-icon>
+    </button>
+   
+      <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="update()">
+              <mat-icon>edit</mat-icon>
+              <span>Update Profile</span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+          </button>
+          
+      </mat-menu>
+</mat-toolbar>
+<router-outlet></router-outlet>

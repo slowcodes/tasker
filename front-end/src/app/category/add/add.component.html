@@ -1,0 +1,25 @@
+<div class="new">
+    <h2>New Category</h2>
+    <span>Create a new category </span>
+    <mat-divider></mat-divider>
+
+
+    <form [formGroup]="newCategoryForm" (ngSubmit)="onSubmit()">
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Category</mat-label>
+            <input matInput placeholder="Ex. Jobs" minlength="3" formControlName="name">
+          </mat-form-field>        
+        </div>
+
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description" placeholder="Ex. Call Adams"></textarea>
+          </mat-form-field>        
+        </div>
+        
+        <button type="submit" class="full-width" mat-raised-button color="primary" [disabled]="newCategoryForm.invalid">Create Category</button>
+
+    </form>
+</div>

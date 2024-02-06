@@ -1,0 +1,102 @@
+<div class="form-container">   
+    <button type="button"  mat-icon-button matSuffix [routerLink]="['/task','new']">
+        <mat-icon>add</mat-icon>
+    </button>
+    <button type="button" (click)="ngAfterViewInit()" mat-icon-button matSuffix >
+        <mat-icon>refresh</mat-icon>
+    </button>
+    <!-- <form [formGroup]="searchFormGroup"> -->
+    <input type="text"  class="stretch-input" placeholder="Search text" (keydown.enter)="search($event)">
+    <!-- </form> -->
+</div>
+
+
+<div class="example-container mat-elevation-z8">
+    @if (isLoadingResults || isRateLimitReached) {
+      <div class="example-loading-shade">
+        @if (isLoadingResults) {
+          <mat-spinner></mat-spinner>
+        }
+        @if (isRateLimitReached) {
+          <div class="example-rate-limit-reached">
+            API rate limit has been reached. It will be reset in one minute.
+          </div>
+        }
+      </div>
+    }
+  
+    <div class="example-table-container">
+  
+      <table mat-table [dataSource]="data" class="example-table"
+             matSort matSortActive="created" matSortActive="priority" matSortDisableClear matSortDirection="desc">
+        <!-- Number Column -->
+        <ng-container matColumnDef="number">
+          <th mat-header-cell *matHeaderCellDef>#</th>
+          <td mat-cell *matCellDef="let row; let i=index">
+            
+            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon button with a vertical three dot icon">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="setUpdateTask(i, row.id)">
+                    <mat-icon>edit</mat-icon>
+                    <span>Update</span>
+                </button>
+                <button mat-menu-item (click)="deleteTask(row.id)">
+                    <mat-icon>delete</mat-icon>
+                    <span>Delete</span>
+                </button>
+                <button mat-menu-item (click)="setAlarm(i)">
+                    <mat-icon>alarm</mat-icon>
+                    <span>Set Alarm</span>
+                </button>
+            </mat-menu>
+            
+            </td>
+        </ng-container>
+  
+        <!-- Title Column -->
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let row">
+            
+            {{row.name}}
+          </td>
+        </ng-container>
+  
+        <!-- Title Column -->
+        <ng-container matColumnDef="priority">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                Priority
+            </th>
+            <td mat-cell *matCellDef="let row">{{row.priority}}</td>
+        </ng-container>
+        
+        <!-- State Column -->
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>Category</th>
+          <td mat-cell *matCellDef="let row">{{row.category.name}}</td>
+        </ng-container>
+
+         <!-- State Column -->
+         <ng-container matColumnDef="desc">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let row">{{row.description}}</td>
+        </ng-container>
+  
+        <!-- Created Column -->
+        <ng-container matColumnDef="created">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+            Due Date
+          </th>
+          <td mat-cell *matCellDef="let row">{{row.due_date | date}}</td>
+        </ng-container>
+  
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  
+    <mat-paginator [length]="resultsLength" [pageSize]="10" aria-label="Select page of Tasker search results"></mat-paginator>
+  </div>
+  

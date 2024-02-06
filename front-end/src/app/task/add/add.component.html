@@ -1,0 +1,60 @@
+<div class="new">
+    <div *ngIf="updateTask; else elseBlock">
+        <h2>Update task</h2>
+        <span>Update the selected task </span>
+    </div>
+
+    <ng-template #elseBlock>
+        <h2>New task</h2>
+    <span>Create a new task </span>
+    </ng-template>
+    <mat-divider></mat-divider>
+
+
+    <form [formGroup]="newTaskForm" (ngSubmit)="onSubmit()">
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Task</mat-label>
+            <input matInput placeholder="Ex. John" minlength="3" formControlName="name">
+          </mat-form-field>        
+        </div>
+
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Description</mat-label>
+            <textarea matInput formControlName="description"></textarea>
+          </mat-form-field>        
+        </div>
+
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Due Date</mat-label>
+            <input matInput placeholder="Ex. mathew@oasis.com" type="date" formControlName="due_date">
+          </mat-form-field>        
+        </div>
+
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Priorty</mat-label>
+            <mat-select formControlName="priority">
+                <mat-option value="HIGH">HIGH</mat-option>
+                <mat-option value="MEDIUM">MEDIUM</mat-option>
+                <mat-option value="LOW">LOW</mat-option>
+            </mat-select>
+          </mat-form-field>        
+        </div>
+
+        <div class="mb">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="category">
+                <mat-option *ngFor="let category of myCategories" [value]="category.id">{{category.name}}</mat-option>
+                
+            </mat-select>
+          </mat-form-field>        
+        </div>
+        
+        <button type="submit" class="full-width" mat-raised-button color="primary" [disabled]="newTaskForm.invalid">Save Task</button>
+
+      </form>
+</div>

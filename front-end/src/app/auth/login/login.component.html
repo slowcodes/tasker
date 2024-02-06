@@ -1,0 +1,35 @@
+<div class="page-sign">
+
+    <div class="card card-sign">
+      <div class="card-header">
+        <a href="../" class="header-logo mb-4">Tasker</a>
+        <h3 class="card-title">Sign In</h3>
+        <p class="card-text">Welcome back! Please signin to continue.</p>
+      </div><!-- card-header -->
+      <div class="card-body">
+        <form [formGroup]="signInForm" (ngSubmit)="submit()">
+
+          <div class="mb">
+            <mat-form-field class="full-width" floatLabel="always">
+              <mat-label>Email</mat-label>
+              <input matInput placeholder="Ex. mathew@oasis.com" type="email" formControlName="email" required="">
+            </mat-form-field>        
+          </div>
+          <div class="mb">
+            <mat-form-field class="full-width" floatLabel="always">
+              <mat-label>Password</mat-label>
+              <input matInput placeholder="Ex. mysecretetext" type="password" type="password" formControlName="password" required="">
+            </mat-form-field>        
+          </div>
+          <div class="mb">
+            <label class="form-label d-flex justify-content-between"> <a href="">Forgot password?</a></label>
+          </div>
+          <button class="btn btn-primary btn-sign" type="submit">Sign In</button>
+  
+          <div class="card-footer">
+            Don't have an account? <a href="/signup">Sign up</a>
+          </div><!-- card-footer -->
+        </form>
+        
+      </div><!-- card -->
+</div>
