@@ -38,7 +38,8 @@ public class TaskController {
             @PathVariable Long pageIndex,
             @RequestParam(required = false) String searchQuery) {
 
-        Page<Task> taskPage = taskService.getUserTask(searchQuery,pageIndex);
+        Long userId = authService.getLoggedInUser().getId();
+        Page<Task> taskPage = taskService.getUserTask(searchQuery,pageIndex,userId);
 
 
         List<TaskCommand> taskCommands = taskPage.getContent()
@@ -47,11 +48,12 @@ public class TaskController {
                 .collect(Collectors.toList());
 
         TaskListResponseCommand responseCommand = new TaskListResponseCommand(
-                taskCommands, taskService.userTotalTasks()
+                taskCommands, taskService.userTotalTasks(userId)
         );
 
         return ResponseEntity.ok(responseCommand);
     }
+
   @PostMapping
   public ResponseEntity<TaskCommand> create(@RequestBody TaskCommand task) {
     return ResponseEntity.ok(

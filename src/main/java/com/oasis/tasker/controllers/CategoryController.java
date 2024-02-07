@@ -6,8 +6,11 @@ import com.oasis.tasker.dtos.CategoryCommand;
 import com.oasis.tasker.entities.Category;
 import com.oasis.tasker.repositories.CategoryRepository;
 import com.oasis.tasker.services.AuthService;
+import com.oasis.tasker.services.CategoryService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,24 +21,24 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryController {
-    private final AuthService authService;
+
+    @Autowired
+    private AuthService authService;
+
+    private final CategoryService categoryService;
     private final CategoryToCategoryCommand categoryToCategoryCommand;
-    private final CategoryRepository categoryRepository;
 
 
-    public CategoryController(AuthService authService,
-                              CategoryRepository categoryRepository,
+    public CategoryController(CategoryService categoryService,
                               CategoryToCategoryCommand categoryToCategoryCommand) {
-        this.authService = authService;
         this.categoryToCategoryCommand = categoryToCategoryCommand;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @GetMapping()
     public ResponseEntity<List<CategoryCommand>> myCategories() {
-        System.out.println("We got here like joke");
         List<CategoryCommand> categoryCommand = new ArrayList<>();
-        categoryRepository.findByUserId(authService.getLoggedInUser().getId()).forEach(
+        categoryService.getUserCategories(authService.getLoggedInUser().getId()).forEach(
                 category -> {
                     categoryCommand.add(this.categoryToCategoryCommand.convert(category));
                 }
@@ -47,44 +50,27 @@ public class CategoryController {
     public ResponseEntity<CategoryCommand> create(@RequestBody CategoryCommand categoryCommand) {
         categoryCommand.setOwnerId(authService.getLoggedInUser().getId());
         return ResponseEntity.ok(
-                newCategory(categoryCommand)
-        );
-    }
-
-    @DeleteMapping("/{id}")
-    void deleteCategory(@PathVariable Long id) {
-        validateCategoryOwnership(id);
-        categoryRepository.deleteById(id);
-    }
-
-    @PutMapping("/{id}")
-    CategoryCommand replaceCategory (@RequestBody CategoryCommand categoryCommand, @PathVariable Long id) {
-        validateCategoryOwnership(id);
-        return categoryRepository.findById(id)
-                .map(category -> {
-                    category.setName(categoryCommand.getName());
-
-                    return categoryToCategoryCommand.convert(category);
-                })
-                .orElseGet(() -> newCategory(categoryCommand));
-
-    }
-
-
-    private CategoryCommand newCategory(CategoryCommand categoryCommand) {
-        return categoryToCategoryCommand.convert(
-                categoryRepository.save(
-                        new Category(
-                                categoryCommand.getName(),
-                                authService.getLoggedInUser()
+                categoryToCategoryCommand.convert(
+                        categoryService.saveCategory(
+                                categoryCommand,authService.getLoggedInUser()
                         )
                 )
         );
     }
 
-    private void validateCategoryOwnership(Long taskId) throws ResponseStatusException {
-        Optional<Category> catgoryOptional = categoryRepository.findById(taskId);
-        if (catgoryOptional.get().getUser().getId() != authService.getLoggedInUser().getId())
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not authorized to update this task");
+    @DeleteMapping("/{id}")
+    void deleteCategory(@PathVariable Long id) {
+        categoryService.validateCategoryOwnership(id, authService.getLoggedInUser().getId());
+        categoryService.deleteCategoryById(id);
+    }
+
+    @PutMapping("/{id}")
+    CategoryCommand replaceCategory (@RequestBody CategoryCommand categoryCommand, @PathVariable Long id) {
+        categoryService.validateCategoryOwnership(id,authService.getLoggedInUser().getId());
+        categoryCommand.setId(id);
+        return categoryToCategoryCommand.convert(
+                categoryService.updateCategory(categoryCommand, authService.getLoggedInUser())
+        );
+
     }
 }
