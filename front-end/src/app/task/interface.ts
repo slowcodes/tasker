@@ -8,6 +8,7 @@ export interface Task {
     ownerId: string
     due_date: Date
     priority: string
+    status: string
 }
 
 
@@ -15,4 +16,13 @@ export interface Task {
 export interface TaskResponse {
     total:number
     tasks: Task[]
+}
+
+export interface TaskRequestParams {
+    priority: string,
+    status: string,
+    due_date: Date,
+    search_text:string,
+    isSearch:number,
+    isFilter:number
 }

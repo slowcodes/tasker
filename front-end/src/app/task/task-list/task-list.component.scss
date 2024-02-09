@@ -1,8 +1,14 @@
+.sorter{
+  margin: 5px 5px 5px 5px;
+}
+.one-third{
+  width: 100%;
+}
 .form-container {
     display: flex;
     align-items: center; /* Vertically center the items */
   }
-  
+
   .stretch-input {
     flex-grow: 1; /* Make the input stretch to fill available space */
     padding: 8px; /* Adjust padding as needed */
@@ -10,7 +16,7 @@
     border-radius: 4px; /* Add border radius for styling */
     margin-right: 8px; /* Add spacing between input and button */
   }
-  
+
   .action-button {
     padding: 8px 1px; /* Adjust padding as needed */
     background-color: #007bff; /* Button background color */
@@ -20,22 +26,22 @@
     cursor: pointer;
   }
 
-/* Structure */
-.example-container {
+  /* Structure */
+  .example-container {
     position: relative;
   }
-  
+
   .example-table-container {
     position: relative;
     min-height: 200px;
     max-height: 450px;
     overflow: auto;
   }
-  
+
   table {
     width: 100%;
   }
-  
+
   .example-loading-shade {
     position: absolute;
     top: 0;
@@ -48,19 +54,18 @@
     align-items: center;
     justify-content: center;
   }
-  
+
   .example-rate-limit-reached {
     max-width: 360px;
     text-align: center;
   }
-  
+
   /* Column Widths */
   .mat-column-number,
   .mat-column-state {
     max-width: 64px;
   }
-  
+
   .mat-column-created {
     max-width: 124px;
   }
-  

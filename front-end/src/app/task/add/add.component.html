@@ -44,6 +44,19 @@
           </mat-form-field>        
         </div>
 
+        <div class="mb" *ngIf="updateTask">
+          <mat-form-field class="full-width" floatLabel="always">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+                <mat-option value="OVERDUE">Overdue</mat-option>
+                <mat-option value="INPROGRESS">Progress</mat-option>
+                <mat-option value="COMPLETED">Completed</mat-option>
+                <mat-option value="PENDING">Pending</mat-option>
+                <mat-option value="ABANDONED">Abandoned</mat-option>
+            </mat-select>
+          </mat-form-field>        
+        </div>
+
         <div class="mb">
           <mat-form-field class="full-width" floatLabel="always">
             <mat-label>Category</mat-label>

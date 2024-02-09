@@ -16,7 +16,7 @@ export class SharedService {
   }
   
   private sharedTask: Task = {
-    id:0,
+    id: 0,
     name: '',
     description: '',
     category: {
@@ -26,7 +26,8 @@ export class SharedService {
     },
     ownerId: '',
     due_date: new Date('2023-12-12'),
-    priority: ''
+    priority: '',
+    status: 'PENDING'
   };
 
   setTask(task: Task) {

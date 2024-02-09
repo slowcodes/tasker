@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" *ngIf="authService.isLoggedin()">
-    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
+    <button (click)="drawer.toggle()" mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon >menu</mat-icon>
     </button>
     <span>Tasker</span>
     <span class="spacer"></span>
@@ -20,7 +20,20 @@
               <mat-icon>logout</mat-icon>
               <span>Logout</span>
           </button>
-          
       </mat-menu>
 </mat-toolbar>
-<router-outlet></router-outlet>
+
+
+<mat-drawer-container class="example-container" autosize>
+  <mat-drawer #drawer class="example-sidenav" mode="side">
+
+<a href="/dashboard">Home</a><br />
+<a href="/task/new">New Task</a><br />
+<a href="/category/new">New Categories</a>
+  </mat-drawer>
+
+  <div class="example-sidenav-content">
+    <router-outlet></router-outlet>
+  </div>
+
+</mat-drawer-container>

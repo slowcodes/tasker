@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, Inject, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, SortDirection } from '@angular/material/sort';
 import { Observable, of as observableOf, catchError, map, merge, startWith, switchMap } from 'rxjs';
 import { TaskService } from '../service/task.service';
-import { Task } from '../interface';
+import { TaskRequestParams, Task } from '../interface';
 import { SharedService } from '../../service/shared.service';
 import { Router } from '@angular/router';
 import {
@@ -16,6 +16,7 @@ import {
   MatDialogActions,
   MatDialogClose,
 } from '@angular/material/dialog';
+import { FormBuilder, Validators } from '@angular/forms';
 declare var Swal: any
 
 @Component({
@@ -23,32 +24,28 @@ declare var Swal: any
   templateUrl: './task-list.component.html',
   styleUrl: './task-list.component.scss'
 })
-export class TaskListComponent implements AfterViewInit {
+export class TaskListComponent implements AfterViewInit, OnInit {
 
 
-  setUpdateTask(index: number, taskId:number) {
-    //[routerLink]="['/task', 'update', row.id]"
-    this.sharedService.setTask(this.data[index])
-    this.router.navigate(['/task/update/', taskId]);
-
-  }
+  
   searchInput: string = '';
-
-
-  search(event: Event) {
-    this.searchInput  = (event.target as HTMLInputElement).value;
-    this.ngAfterViewInit()
-  }
+  search_parity = 1;
+  filter_parity = 0;
 
 
 
-  displayedColumns: string[] = [ 'number', 'created', 'priority', 'state', 'title','desc'];
+
+
+
+  displayedColumns: string[] = [ 'number', 'created', 'priority', 'category', 'state', 'title','desc'];
   
   data: Task[] = [];
 
   resultsLength = 0;
   isLoadingResults = true;
   isRateLimitReached = false;
+
+  filterForm: any;
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -57,11 +54,23 @@ export class TaskListComponent implements AfterViewInit {
   sort!: MatSort;
   
   constructor(private _httpClient: HttpClient, 
+    private formBuilder: FormBuilder,
     private sharedService: SharedService,
     private router : Router,
     public dialog: MatDialog,
-    private taskService: TaskService) {}
+    private taskService: TaskService) {
+      this.filterForm = formBuilder.group({});
+  }
+  ngOnInit(): void {
+    this.filterForm = this.formBuilder.group({
+      status: ['', [Validators.required]],
+      priority: ['', Validators.required],
+      due_date: ['', Validators.required]
+    });
+  }
 
+  
+  
   deleteTask(taskId:number):void {
     Swal.fire({
       title: "Are you sure?",
@@ -92,7 +101,6 @@ export class TaskListComponent implements AfterViewInit {
     });
   }
 
-
   setAlarm(index:number){
    
     this.openDialog(this.data[index])
@@ -100,7 +108,7 @@ export class TaskListComponent implements AfterViewInit {
   }
 
   openDialog(task: Task): void {
-    const dialogRef = this.dialog.open(AlarmDialog, {
+    const dialogRef = this.dialog.open(TaskReminder, {
       data: task,
     });
 
@@ -111,8 +119,25 @@ export class TaskListComponent implements AfterViewInit {
   }
 
 
-
   ngAfterViewInit() {
+
+    var selected_date = this.formatDateString(this.filterForm.value.due_date)
+
+    if(this.filterForm.value.due_date==''){
+      selected_date = ''
+    }
+
+    const taskRequestParams: TaskRequestParams = {
+      priority: this.filterForm.value.priority,
+      status: this.filterForm.value.status,
+      due_date: selected_date,
+      search_text: this.searchInput,
+      isSearch: this.search_parity,
+      isFilter: this.filter_parity
+    }
+
+    console.log(taskRequestParams)
+
 
     // If the user changes the sort order, reset back to the first page.
     this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
@@ -123,7 +148,8 @@ export class TaskListComponent implements AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
           return this.taskService.getMyTask(
-            this.paginator.pageIndex, this.searchInput
+            this.paginator.pageIndex, 
+            taskRequestParams
           ).pipe(catchError(() => observableOf(null)));
         }),
         map(data => {
@@ -139,11 +165,51 @@ export class TaskListComponent implements AfterViewInit {
           // limit errors, we do not want to reset the paginator to zero, as that
           // would prevent users from re-triggering requests.
           this.resultsLength = data.total;
+          console.log(data.tasks)
           return data.tasks;
         }),
       )
       .subscribe(data => (this.data = data));
     }
+
+    setUpdateTask(index: number, taskId:number) {
+      //[routerLink]="['/task', 'update', row.id]"
+      this.sharedService.setTask(this.data[index])
+      this.router.navigate(['/task/update/', taskId]);
+  
+    }
+    
+    search(event: Event) {
+      this.searchInput  = (event.target as HTMLInputElement).value;
+      this.search_parity =1
+      this.filter_parity =0;
+      this.ngAfterViewInit()
+    }
+  
+    filter(){
+      this.search_parity =0
+      this.filter_parity =1;
+      this.ngAfterViewInit()
+    }
+
+    formatDateString(dateString:string): any{
+
+      // Create a new Date object from the given date string
+      const date = new Date(dateString);
+
+      // Extract date components
+      const year = date.getFullYear();
+      const month = ('0' + (date.getMonth() + 1)).slice(-2); // Add leading zero if needed
+      const day = ('0' + date.getDate()).slice(-2); // Add leading zero if needed
+      const hours = ('0' + date.getHours()).slice(-2); // Add leading zero if needed
+      const minutes = ('0' + date.getMinutes()).slice(-2); // Add leading zero if needed
+      const seconds = ('0' + date.getSeconds()).slice(-2); // Add leading zero if needed
+
+      // Construct the formatted date string
+      const formattedDateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      return formattedDateString
+    }
+
 }
 
 
@@ -151,9 +217,9 @@ export class TaskListComponent implements AfterViewInit {
   selector: 'alarm-dialog',
   templateUrl: 'alarm-dialog.html',
 })
-export class AlarmDialog{
+export class TaskReminder{
   constructor(
-    public dialogRef: MatDialogRef<AlarmDialog>,
+    public dialogRef: MatDialogRef<TaskReminder>,
     @Inject(MAT_DIALOG_DATA) public data: Task,
   ) {}
 

@@ -1,9 +1,9 @@
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Login, AccessToken } from '../../auth/interface';
 import { API_URL } from '../../constant';
-import { Task, TaskResponse } from '../interface';
+import { TaskRequestParams, Task, TaskResponse } from '../interface';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
@@ -24,9 +24,9 @@ export class TaskService {
   }
   
 
-  getMyTask(pageNumber:number, searchTerm:string='') : Observable<TaskResponse>{
+  getMyTask(pageNumber:number, filter:TaskRequestParams) : Observable<TaskResponse>{
     const headers = this.headers;
-    return this.httpClient.get<TaskResponse>(`${API_URL}/api/v1/task/${pageNumber}?searchQuery=${searchTerm}`, {headers});
+    return this.httpClient.get<TaskResponse>(`${API_URL}/api/v1/task/${pageNumber}?searchQuery=${filter.search_text}&&status=${filter.status}&&priority=${filter.priority}&&due_date=${filter.due_date}&&isSearch=${filter.isSearch}&&isFilter=${filter.isFilter}`, {headers});
   }
 
   addTask(data: Task): Observable<HttpResponse<any>> {

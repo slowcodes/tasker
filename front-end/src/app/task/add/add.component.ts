@@ -69,6 +69,7 @@ export class AddComponent implements OnInit {
         priority: [this.sharedService.getTask().priority, Validators.required],
         category: [this.sharedService.getTask().category.id, Validators.required],
         due_date: [this.sharedService.getTask().due_date, Validators.required],
+        status: [this.sharedService.getTask().status, Validators.required]
       });
     }
     else{
@@ -86,17 +87,18 @@ export class AddComponent implements OnInit {
 
   onSubmit(): void {
     const task : Task = {
-      id:this.sharedService.getTask().id,
+      id: this.sharedService.getTask().id,
       name: this.newTaskForm.value.name,
       description: this.newTaskForm.value.description,
       category: {
         name: '',
         id: this.newTaskForm.value.category,
-        ownerId: 0 
+        ownerId: 0
       },
       ownerId: '',
       due_date: this.newTaskForm.value.due_date,
-      priority: this.newTaskForm.value.priority
+      priority: this.newTaskForm.value.priority,
+      status: this.newTaskForm.value.status
     }
 
     if(this.updateTask){

@@ -24,17 +24,17 @@ export class DashboardComponent implements OnInit {
 
 
 
-  loadTasks() {
-    this.taskService.getMyTask(1).subscribe(
-      (data) => {
-        console.log(data)
-        this.tasks = data; // Assuming the response is an array of tasks
-      },
-      (error) => {
-        console.error('Error fetching tasks:', error);
-      }
-    );
-  }
+  // loadTasks() {
+  //   this.taskService.getMyTask(1).subscribe(
+  //     (data) => {
+  //       console.log(data)
+  //       this.tasks = data; // Assuming the response is an array of tasks
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching tasks:', error);
+  //     }
+  //   );
+  // }
 }
 
   

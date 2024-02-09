@@ -25,6 +25,10 @@ export class LoginComponent implements OnInit {
     private sharedService: SharedService,
     private authService: AuthService){
     this.signInForm = this.formBuilder.group({});
+
+    if(this.authService.isLoggedin()){
+      router.navigateByUrl("/dashboard");
+    }
   }
   ngOnInit(): void {
     this.signInForm = this.formBuilder.group({
@@ -109,7 +113,10 @@ export class SignupComponent implements OnInit{
     private activatedRoute: ActivatedRoute,
     private sharedService: SharedService,
     private authService: AuthService){
-    this.signUpForm = this.formBuilder.group({});
+      if(!this.authService.isLoggedin()){
+        router.navigateByUrl("/dashboard");
+      }
+      this.signUpForm = this.formBuilder.group({});
   }
   
   ngOnInit(): void {

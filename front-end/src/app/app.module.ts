@@ -18,6 +18,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { CategoryModule } from './category/category.module';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatExpansionModule} from '@angular/material/expansion';
+import { InfoBarComponent } from './info-bar/info-bar.component';
 
 
 
@@ -25,6 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
     declarations: [
         AppComponent,
         DashboardComponent,
+        InfoBarComponent,
     ],
     providers: [],
     bootstrap: [AppComponent],
@@ -41,9 +45,12 @@ import { MatMenuModule } from '@angular/material/menu';
         MatIconModule,
         MatFormFieldModule,
         MatInputModule,
+        MatSidenavModule,
         TaskModule,
         CategoryModule,
+        MatExpansionModule,
         MatMenuModule
-    ]
+    ],
+    exports:[InfoBarComponent]
 })
 export class AppModule { }
