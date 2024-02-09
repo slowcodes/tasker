@@ -113,8 +113,12 @@ export class TaskListComponent implements AfterViewInit, OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      //this.result = result;
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Sorry Mate, We have't implemented this yet!",
+        footer: '<a href="#">Why do I have this issue?</a>'
+      });
     });
   }
 
@@ -135,8 +139,6 @@ export class TaskListComponent implements AfterViewInit, OnInit {
       isSearch: this.search_parity,
       isFilter: this.filter_parity
     }
-
-    console.log(taskRequestParams)
 
 
     // If the user changes the sort order, reset back to the first page.
