@@ -22,8 +22,9 @@ public class TaskCommandToTask implements Converter<TaskCommand, Task> {
         task.setDescription(source.getDescription());
         task.setPriority(source.getPriority());
         task.setName(source.getName());
-        task.setDue_date(source.getDue_date());
+        task.setDueDate(source.getDueDate());
         task.setCategory(cctc.convert(source.getCategory()));
+        task.setStatus(source.getStatus());
 
         if(source.getOwnerId() != null){
             User user = new User();

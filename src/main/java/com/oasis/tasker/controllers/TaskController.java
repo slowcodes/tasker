@@ -1,9 +1,9 @@
 package com.oasis.tasker.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.oasis.tasker.dtos.FilterCommand;
 import com.oasis.tasker.dtos.TaskListResponseCommand;
 import com.oasis.tasker.converters.task.TaskToTaskCommand;
 import com.oasis.tasker.dtos.TaskCommand;
@@ -35,11 +35,33 @@ public class TaskController {
 
     @GetMapping("/{pageIndex}")
     public ResponseEntity<TaskListResponseCommand> myTasks(
+            @RequestParam(name = "priority", required = false) String priority,
+            @RequestParam(name = "status", required = false) String status,
+            @RequestParam(name = "due_date", required = false) String due_date,
             @PathVariable Long pageIndex,
+            @RequestParam(name = "isSearch", required = false) Boolean isSearch,
+            @RequestParam(name = "isFilter", required = false) Boolean isFilter,
             @RequestParam(required = false) String searchQuery) {
 
         Long userId = authService.getLoggedInUser().getId();
-        Page<Task> taskPage = taskService.getUserTask(searchQuery,pageIndex,userId);
+
+        Page<Task> taskPage;
+        if(isFilter){
+            taskPage = taskService.filterMyTask(
+                    new FilterCommand(
+                            due_date,
+                            priority,
+                            status
+                    ),pageIndex,userId);
+        }
+        else if (isSearch){
+
+            taskPage = taskService.searchMyTasks(searchQuery, pageIndex, userId);
+        }
+        else {
+            taskPage = taskService.fetchAll(pageIndex, userId);
+        }
+
 
 
         List<TaskCommand> taskCommands = taskPage.getContent()

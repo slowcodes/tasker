@@ -1,11 +1,14 @@
 package com.oasis.tasker.entities;
 
 import com.oasis.tasker.enums.Priority;
+import com.oasis.tasker.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -25,8 +28,11 @@ public class Task extends BaseModel{
     @JoinColumn(name = "user_id")
     private User owner;
 
-    private Date due_date;
+    private LocalDateTime dueDate;
 
     @Enumerated(EnumType.ORDINAL)
     private Priority priority;
+
+    @Enumerated(EnumType.ORDINAL)
+    private Status status;
 }
