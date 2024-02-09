@@ -45,6 +45,7 @@ public class AuthConfig {
         .build();
   }
 
+  //should be configured in production to allow specific ips and methods
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();

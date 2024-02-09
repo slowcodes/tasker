@@ -76,7 +76,7 @@ public class AuthController {
       );
     }
     else{
-      System.out.println("COuld finf user");
+      //System.out.println("Could not find user");
       return ResponseEntity.notFound().build();
     }
 

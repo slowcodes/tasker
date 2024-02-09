@@ -68,29 +68,24 @@ public class TaskService {
             System.out.println("some filters or no filters are set");
             // Check each combination of fields and perform filtering accordingly
             if (filter.getDueDate() != null && filter.getPriority() == null && filter.getStatus() == null) {
-                System.out.println("Only dueDate is set");
+                //System.out.println("Only dueDate is set");
                 taskPage = repository.findByOwnerIdAndDueDate(ownerId, stringToLocalDateTime(filter.getDueDate()), pageable);
-            }
-            else if (filter.getPriority() != null && (filter.getStatus() == null || filter.getStatus().isEmpty()) && filter.getDueDate().length()<3) {
-                System.out.println("Only priority is set");
+            } else if (filter.getPriority() != null && (filter.getStatus() == null || filter.getStatus().isEmpty()) && filter.getDueDate().length()<3) {
+                //System.out.println("Only priority is set");
                 taskPage = repository.findByOwnerIdAndPriority(ownerId, Priority.valueOf(filter.getPriority()), pageable);
-            }
-            else if (filter.getStatus() != null && (filter.getPriority() == null || filter.getPriority().isEmpty()) && filter.getDueDate() == null) {
-                System.out.println("Only status is set");
+            } else if (filter.getStatus() != null && (filter.getPriority() == null || filter.getPriority().isEmpty()) && filter.getDueDate() == null) {
+                //System.out.println("Only status is set");
                 taskPage = repository.findByOwnerIdAndStatus(ownerId, Status.valueOf(filter.getStatus()), pageable);
-            }
-            else if (filter.getPriority() != null && filter.getStatus() != null && (filter.getDueDate() == null || filter.getDueDate().isEmpty())) {
-                System.out.println("Only priority and status are set");
+            } else if (filter.getPriority() != null && filter.getStatus() != null && (filter.getDueDate() == null || filter.getDueDate().isEmpty())) {
+                //System.out.println("Only priority and status are set");
                 taskPage = repository.findByOwnerIdAndPriorityAndStatus(ownerId, Priority.valueOf(filter.getPriority()), Status.valueOf(filter.getStatus()), pageable);
-            }
-            else if (filter.getPriority() != null && filter.getDueDate() != null && filter.getStatus() == null) {
-                System.out.println("Only priority and dueDate are set");
+            } else if (filter.getPriority() != null && filter.getDueDate() != null && filter.getStatus() == null) {
+                //System.out.println("Only priority and dueDate are set");
                 taskPage = repository.findByOwnerIdAndPriorityAndDueDate(ownerId, Priority.valueOf(filter.getPriority()), stringToLocalDateTime(filter.getDueDate()), pageable);
             } else if (filter.getDueDate() != null && filter.getStatus() != null && filter.getPriority() == null) {
-                System.out.println("Only dueDate and status are set");
+                //System.out.println("Only dueDate and status are set");
                 taskPage = repository.findByOwnerIdAndDueDateAndStatus(ownerId, stringToLocalDateTime(filter.getDueDate()), Status.valueOf(filter.getStatus()), pageable);
-            }
-            else {
+            } else {
                 //search text is empty
                 taskPage = fetchAll(pageIndex,ownerId);
             }
